@@ -90,8 +90,13 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "history"
     
     if cmd == "history":
-        for e in get_history():
-            print(f"#{e['id']} | {e['score_display']}/10 | {e['who']} | {e['when'][:10]}")
+        history = get_history()
+        print("☕ Latte Art Leaderboard")
+        print("Rank Barista Score Date")
+        for i, e in enumerate(history, 1):
+            dt = datetime.fromisoformat(e['when'].replace('Z', '+00:00'))
+            e_date = f"{dt:%b} {dt.day}, {dt:%Y}"
+            print(f"{i} {e['who']} {e['score_raw']:.2f} {e_date}")
     elif cmd == "stats":
         s = get_stats()
         if s:
@@ -107,6 +112,44 @@ if __name__ == "__main__":
         parser.add_argument("--notes", default="")
         parser.add_argument("--photo", default=None)
         parser.add_argument("--example-for", type=int, default=None)
+        parser.add_argument("--symmetry", type=float, default=None)
+        parser.add_argument("--contrast", type=float, default=None)
+        parser.add_argument("--flow", type=float, default=None)
+        parser.add_argument("--detail", type=float, default=None)
+        parser.add_argument("--overall", type=float, default=None)
         args = parser.parse_args(sys.argv[2:])
-        entry = add_entry(args.who, args.when, args.score, {}, args.notes, args.photo, args.example_for)
-        print(f"Entry #{entry['id']} saved with score {entry['score_display']}/10")
+        
+        breakdown = {}
+        if args.symmetry is not None:
+            breakdown = {
+                "symmetry": args.symmetry,
+                "contrast": args.contrast,
+                "flow": args.flow,
+                "detail": args.detail,
+                "overall": args.overall
+            }
+        
+        entry = add_entry(args.who, args.when, args.score, breakdown, args.notes, args.photo, args.example_for)
+        
+        # Format output
+        from datetime import datetime
+        dt = datetime.fromisoformat(entry['when'].replace('Z', '+00:00'))
+        date_str = f"{dt:%b} {dt.day}, {dt:%Y}"
+        
+        print(f"☕ Latte Art Rating")
+        print(f"Entry #{entry['id']} — {entry['who']} ({date_str})")
+        print(f"Score: {entry['score_raw']:.2f} (displayed: {entry['score_display']}/10)")
+        print("Criteria Score")
+        if entry['breakdown']:
+            for k, v in entry['breakdown'].items():
+                print(f"{k.capitalize()} {v:.2f}")
+        print(f"Verdict: {entry['notes']}")
+        history = get_history()
+        print("Leaderboard 🏆")
+        print("Rank Barista Score Date")
+        for i, e in enumerate(history, 1):
+            dt = datetime.fromisoformat(e['when'].replace('Z', '+00:00'))
+            e_date = f"{dt:%b} {dt.day}, {dt:%Y}"
+            print(f"{i} {e['who']} {e['score_raw']:.2f} {e_date}")
+        top = history[0]
+        print(f"{top['who']} is in the lead! 🏆 Beat {top['score_raw']:.2f} to take first place.")

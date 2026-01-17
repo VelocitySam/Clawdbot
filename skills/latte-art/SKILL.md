@@ -80,3 +80,28 @@ Score 0-10 based on:
 - `latte top` - Show top 5 entries
 - `latte average` - Show overall statistics
 - `latte examples <1-10>` - Show example photo for a rating
+
+## Output Format
+
+When rating, always format output like this:
+
+```
+☕ Latte Art Rating
+Entry #{id} — {who} ({date})
+Score: {score_raw:.2f} (displayed: {score_display}/10)
+Criteria Score
+Symmetry {symmetry:.2f}
+Contrast {contrast:.2f}
+Flow {flow:.2f}
+Detail {detail:.2f}
+Overall {overall:.2f}
+Verdict: {notes}
+Leaderboard 🏆
+Rank Barista Score Date
+1 {rank1_name} {rank1_score:.2f} {rank1_date}
+2 {rank2_name} {rank2_score:.2f} {rank2_date}
+3 {rank3_name} {rank3_score:.2f} {rank3_date}
+{name_in_lead} is in the lead! 🏆 Beat {top_score:.2f} to take first place.
+```
+
+When showing history/leaderboard, always include all entries sorted by score (highest first).
