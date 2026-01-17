@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velocity Engineering - Design Options</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            padding: 48px 24px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 48px;
+        }
+
+        .options {
+            display: grid;
+            gap: 16px;
+        }
+
+        a {
+            display: block;
+            background: #141414;
+            border: 1px solid #262626;
+            border-radius: 12px;
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        a:hover {
+            border-color: #444;
+            background: #1a1a1a;
+        }
+
+        .option-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .option-desc {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #262626;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #888;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Velocity Engineering 🚀</h1>
+        <p class="subtitle">Pick a vibe, Sam</p>
+
+        <div class="options">
+            <a href="option-a-dark.html">
+                <div class="option-name">Option A — Dark Modern <span class="tag">original</span></div>
+                <div class="option-desc">Dark theme, blue accents, clean cards. Standard SaaS startup look.</div>
+            </a>
+
+            <a href="option-b-light.html">
+                <div class="option-name">Option B — Light & Clean</div>
+                <div class="option-desc">White background, Space Grotesk font, numbered sections. Refined and readable.</div>
+            </a>
+
+            <a href="option-c-bold.html">
+                <div class="option-name">Option C — Terminal Bold <span class="tag">my pick</span></div>
+                <div class="option-desc">Black + neon green, JetBrains Mono, dev aesthetic. Says "we write code" without saying it.</div>
+            </a>
+
+            <a href="option-d-minimal.html">
+                <div class="option-name">Option D — Ultra Minimal</div>
+                <div class="option-desc">Just text. No images, no fancy layout. Brutalist "the work speaks for itself" energy.</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velocity Engineering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --surface: #f8f8f8;
+            --border: #e5e5e5;
+            --text: #0a0a0a;
+            --text-muted: #525252;
+            --accent: #0a0a0a;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        nav {
+            padding: 32px 0;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.125rem;
+            letter-spacing: -0.02em;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+            border-bottom: 1px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--text);
+            border-bottom-color: var(--text);
+        }
+
+        .hero {
+            padding: 100px 0 120px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.0;
+            margin-bottom: 32px;
+        }
+
+        .hero h1 span {
+            display: block;
+            color: var(--text-muted);
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 520px;
+            margin-bottom: 48px;
+            line-height: 1.7;
+        }
+
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--accent);
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+
+        .cta:hover {
+            opacity: 0.8;
+        }
+
+        .cta svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        section.track-record {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .track-record h2 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+        }
+
+        .stat-item {
+            text-align: left;
+        }
+
+        .stat-item .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-item p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        section.services {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .services h2 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 48px 64px;
+        }
+
+        .service-item h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .service-item p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        section.background {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .background h2 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+        }
+
+        .background-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+        }
+
+        .background-text p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .background-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .experience-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .experience-item {
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .experience-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .experience-item h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .experience-item .role {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        section.approach {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .approach h2 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+        }
+
+        .approach-list {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .approach-item {
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .approach-num {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            padding-top: 4px;
+        }
+
+        .approach-item h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .approach-item p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        section.contact {
+            padding: 100px 0;
+        }
+
+        .contact h2 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .contact p {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            font-size: 1.05rem;
+        }
+
+        .contact-email {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text);
+            text-decoration: none;
+            border-bottom: 2px solid var(--text);
+            padding-bottom: 4px;
+            transition: opacity 0.2s;
+        }
+
+        .contact-email:hover {
+            opacity: 0.6;
+        }
+
+        footer {
+            padding: 32px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 0 80px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 32px 24px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .background-content {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .approach-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .approach-num {
+                padding-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="logo">Velocity Engineering</div>
+            <a href="mailto:sam@velocity.engineering">Contact</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>
+                Engineer first.
+                <span>Leader by practice.</span>
+            </h1>
+            <p>I build teams, fix interfaces, and deliver. From Tesla's gigafactories to €150M dairy portfolios — practical solutions in complex environments where stakeholders need to trust the plan.</p>
+            <a href="mailto:sam@velocity.engineering" class="cta">
+                Work with me
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <section class="track-record">
+        <div class="container">
+            <h2>Track Record</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="number">€250M+</div>
+                    <p>Capital projects delivered</p>
+                </div>
+                <div class="stat-item">
+                    <div class="number">2→15</div>
+                    <p>Team scaled at Tesla in 24 months</p>
+                </div>
+                <div class="stat-item">
+                    <div class="number">35%</div>
+                    <p>Equipment reduction on 2nd-gen line</p>
+                </div>
+                <div class="stat-item">
+                    <div class="number">100+</div>
+                    <p>Days/year onsite commissioning</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services">
+        <div class="container">
+            <h2>What I Do</h2>
+            <div class="services-grid">
+                <div class="service-item">
+                    <h3>Project Recovery</h3>
+                    <p>Late projects with technical and contractual issues. I diagnose, rebuild trust, negotiate settlements, and get to handover. Done it at €75M scale.</p>
+                </div>
+                <div class="service-item">
+                    <h3>Scale-Up & Commissioning</h3>
+                    <p>Taking processes from pilot to production. FAT/SAT, IQ/OQ/PQ, ramp planning. I've commissioned lines on four continents.</p>
+                </div>
+                <div class="service-item">
+                    <h3>Process & Systems Integration</h3>
+                    <p>Critical interfaces between teams and technologies — the things that cause delays. Smart P&IDs, controls philosophy, automation architecture.</p>
+                </div>
+                <div class="service-item">
+                    <h3>Team Building</h3>
+                    <p>Building engineering teams that deliver. From hiring and coaching to establishing governance that works in complex, multi-stakeholder environments.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="background">
+        <div class="container">
+            <h2>Background</h2>
+            <div class="background-content">
+                <div class="background-text">
+                    <p>I started as a process technologist, spending 100+ days a year onsite commissioning and optimising plants globally. That hands-on foundation shapes everything I do.</p>
+                    <p>At Tesla, I led the end-to-end delivery of dry-electrode mixing lines at Gigafactory Berlin — €100M scope, ATEX/GefStoffV compliance, built the team from scratch. We developed the "design once, replicate many" approach for rapid global deployment.</p>
+                    <p>At GEA, I ran €150M portfolios, turned around troubled projects, and rebuilt teams. The infant formula factory I inherited was 1.5 years late with major issues — we closed it out, settled claims, and handed over a working plant.</p>
+                </div>
+                <div class="experience-list">
+                    <div class="experience-item">
+                        <h4>Visibuilt</h4>
+                        <div class="role">Head of Engineering & Production</div>
+                    </div>
+                    <div class="experience-item">
+                        <h4>Tesla</h4>
+                        <div class="role">Manufacturing Engineering Manager — Dry Electrode</div>
+                    </div>
+                    <div class="experience-item">
+                        <h4>GEA</h4>
+                        <div class="role">Head of Large Projects & Process Technology</div>
+                    </div>
+                    <div class="experience-item">
+                        <h4>Fonterra</h4>
+                        <div class="role">Site Technologist</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="approach">
+        <div class="container">
+            <h2>How I Work</h2>
+            <div class="approach-list">
+                <div class="approach-item">
+                    <div class="approach-num">01</div>
+                    <div>
+                        <h3>Hands-on by default</h3>
+                        <p>I don't just advise — I build. Whether it's troubleshooting a controls issue or redesigning a line, I'm in the details.</p>
+                    </div>
+                </div>
+                <div class="approach-item">
+                    <div class="approach-num">02</div>
+                    <div>
+                        <h3>Interfaces first</h3>
+                        <p>Most project failures happen at the boundaries between teams and systems. I focus there — the handoffs, the integration points, the things everyone assumes someone else owns.</p>
+                    </div>
+                </div>
+                <div class="approach-item">
+                    <div class="approach-num">03</div>
+                    <div>
+                        <h3>Predictable delivery</h3>
+                        <p>Good planning, honest estimates, proactive risk management. Stakeholders should trust the plan because the plan is trustworthy.</p>
+                    </div>
+                </div>
+                <div class="approach-item">
+                    <div class="approach-num">04</div>
+                    <div>
+                        <h3>Knowledge transfer built in</h3>
+                        <p>I'm not here to create dependency. The goal is to leave your team stronger and more capable than when I arrived.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact">
+        <div class="container">
+            <h2>Let's talk</h2>
+            <p>Stuck project? Scaling challenge? Team needs building?</p>
+            <a href="mailto:sam@velocity.engineering" class="contact-email">sam@velocity.engineering</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <span>© 2026 Velocity Engineering</span>
+            <span>Copenhagen</span>
+        </div>
+    </footer>
+</body>
+</html>

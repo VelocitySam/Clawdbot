@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velocity Engineering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --border: #262626;
+            --text: #fafafa;
+            --text-muted: #a1a1a1;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        nav {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--text);
+        }
+
+        .hero {
+            padding: 120px 0 80px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            max-width: 800px;
+            margin-bottom: 24px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .cta:hover {
+            background: var(--accent-hover);
+        }
+
+        .cta svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .what-we-do {
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-label {
+            font-size: 0.875rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .what-we-do h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 48px;
+            max-width: 500px;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .service {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .service h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .service p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .anti-bs {
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .anti-bs h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .principles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+        }
+
+        .principle {
+            display: flex;
+            gap: 16px;
+        }
+
+        .principle-icon {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .principle h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .principle p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .contact {
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .contact-inner {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 64px;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .contact p {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        .contact .cta {
+            font-size: 1rem;
+        }
+
+        footer {
+            padding: 32px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 80px 0 60px;
+            }
+            
+            .contact-inner {
+                padding: 40px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="logo">Velocity<span>.</span></div>
+            <a href="mailto:sam@velocity.engineering">Get in touch</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Engineering that ships.</h1>
+            <p>We're not here to make slides. We build, deploy, and deliver. Execution-focused engineering for teams that need results, not reports.</p>
+            <a href="mailto:sam@velocity.engineering" class="cta">
+                Start a conversation
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <section class="what-we-do">
+        <div class="container">
+            <div class="section-label">What we do</div>
+            <h2>From idea to production. No handoff theatre.</h2>
+            <div class="services">
+                <div class="service">
+                    <h3>System Architecture</h3>
+                    <p>Design that survives contact with reality. Scalable, maintainable, and actually buildable.</p>
+                </div>
+                <div class="service">
+                    <h3>Technical Execution</h3>
+                    <p>We write code, not just recommendations. Embedded with your team or running independently.</p>
+                </div>
+                <div class="service">
+                    <h3>Infrastructure & DevOps</h3>
+                    <p>CI/CD, cloud architecture, Kubernetes, the works. Built to run, not just demo.</p>
+                </div>
+                <div class="service">
+                    <h3>Team Acceleration</h3>
+                    <p>Unblock your team. Fix processes. Ship the backlog. Move on.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="anti-bs">
+        <div class="container">
+            <div class="section-label">How we work</div>
+            <h2>The anti-consultancy consultancy.</h2>
+            <div class="principles">
+                <div class="principle">
+                    <div class="principle-icon">⚡</div>
+                    <div>
+                        <h3>Speed over ceremony</h3>
+                        <p>Less process, more progress. We'll figure it out in code, not committees.</p>
+                    </div>
+                </div>
+                <div class="principle">
+                    <div class="principle-icon">🎯</div>
+                    <div>
+                        <h3>Outcomes over optics</h3>
+                        <p>We measure success by what's running in production, not what's in the deck.</p>
+                    </div>
+                </div>
+                <div class="principle">
+                    <div class="principle-icon">🔧</div>
+                    <div>
+                        <h3>Hands on keyboards</h3>
+                        <p>Senior engineers who build. No bait-and-switch with junior staff.</p>
+                    </div>
+                </div>
+                <div class="principle">
+                    <div class="principle-icon">🚪</div>
+                    <div>
+                        <h3>Built to leave</h3>
+                        <p>We transfer knowledge, not create dependency. The goal is to make ourselves unnecessary.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact">
+        <div class="container">
+            <div class="contact-inner">
+                <h2>Let's build something.</h2>
+                <p>Got a project stuck? A system that needs building? A team that needs velocity?</p>
+                <a href="mailto:sam@velocity.engineering" class="cta">
+                    sam@velocity.engineering
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Velocity Engineering</p>
+        </div>
+    </footer>
+</body>
+</html>
