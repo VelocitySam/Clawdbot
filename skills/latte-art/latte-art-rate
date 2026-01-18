@@ -210,9 +210,9 @@ def rate_photo(image_path, rater_name=None):
     output.append("")
     output.append("📈 VERDICT")
     output.append(f"   {verdict}")
+    output.append("")
     
     # Add leaderboard
-    output.append("")
     output.append(display_leaderboard(leaderboard))
     
     return "\n".join(output)
