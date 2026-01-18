@@ -1,21 +1,35 @@
 #!/usr/bin/env python3
 """
 Latte Art Rating Skill
-Analyzes latte art photos and provides detailed scoring breakdown
+Analyzes latte art photos, provides detailed scoring, and tracks leaderboard
 """
 
 import os
 import sys
 import json
 import argparse
+import shutil
 from pathlib import Path
 from datetime import datetime
 
-# Image analysis would normally use OpenCV/PIL
-# For this skill, we provide a structured framework
-
 SKILL_DIR = Path(__file__).parent
 REFERENCES_DIR = SKILL_DIR / "references"
+LEADERBOARD_FILE = SKILL_DIR / "leaderboard.json"
+
+# Ensure directories exist
+REFERENCES_DIR.mkdir(exist_ok=True)
+
+def load_leaderboard():
+    """Load leaderboard from file"""
+    if LEADERBOARD_FILE.exists():
+        with open(LEADERBOARD_FILE, 'r') as f:
+            return json.load(f)
+    return {"entries": []}
+
+def save_leaderboard(leaderboard):
+    """Save leaderboard to file"""
+    with open(LEADERBOARD_FILE, 'w') as f:
+        json.dump(leaderboard, f, indent=2)
 
 def analyze_image(image_path):
     """
@@ -82,7 +96,72 @@ def format_score_bar(score, max_score=10, length=20):
     filled = int((score / max_score) * length)
     return "█" * filled + "░" * (length - filled)
 
-def rate_photo(image_path):
+def get_rater_name():
+    """Get the name of who is being rated"""
+    print("\n👤 Who poured this? (enter name or press Enter to skip)")
+    name = input("   Name: ").strip()
+    return name if name else "Unknown"
+
+def save_as_reference(image_path, score):
+    """Save this photo as the reference for its score bracket"""
+    score_int = int(score)
+    ref_path = REFERENCES_DIR / f"score-{score_int}.jpg"
+    
+    # Only save if this is a better reference (or no reference exists)
+    existing_score = get_existing_reference_score(score_int)
+    if existing_score is None or score > existing_score:
+        shutil.copy2(image_path, ref_path)
+        return True
+    return False
+
+def get_existing_reference_score(score_int):
+    """Check if reference photo exists for this score"""
+    ref_path = REFERENCES_DIR / f"score-{score_int}.jpg"
+    if ref_path.exists():
+        return score_int + 0.5  # Assume existing is slightly better
+    return None
+
+def update_leaderboard(leaderboard, name, score, photo_path):
+    """Update leaderboard with new entry"""
+    entry = {
+        "name": name,
+        "score": score,
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "photo": os.path.basename(photo_path)
+    }
+    
+    leaderboard["entries"].append(entry)
+    
+    # Sort by score descending
+    leaderboard["entries"] = sorted(
+        leaderboard["entries"], 
+        key=lambda x: x["score"], 
+        reverse=True
+    )
+    
+    # Keep only top 5
+    leaderboard["entries"] = leaderboard["entries"][:5]
+    
+    save_leaderboard(leaderboard)
+
+def display_leaderboard(leaderboard):
+    """Display the leaderboard"""
+    if not leaderboard["entries"]:
+        return ""
+    
+    output = []
+    output.append("")
+    output.append("🏆 TOP 5 LEADERBOARD")
+    output.append("─" * 44)
+    
+    for i, entry in enumerate(leaderboard["entries"], 1):
+        medal = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"][i-1]
+        output.append(f" {medal} {entry['name']:15} {entry['score']:.2f}/10  {entry['date']}")
+    
+    output.append("")
+    return "\n".join(output)
+
+def rate_photo(image_path, rater_name=None):
     """Main function to rate a latte art photo"""
     
     if not os.path.exists(image_path):
@@ -94,6 +173,23 @@ def rate_photo(image_path):
     final_score = calculate_final_score(criteria)
     verdict = get_verdict(final_score)
     
+    # Get rater name if not provided
+    if not rater_name:
+        rater_name = get_rater_name()
+    
+    # Update leaderboard and save reference if named
+    leaderboard = load_leaderboard()
+    if rater_name and rater_name != "Unknown":
+        update_leaderboard(leaderboard, rater_name, final_score, image_path)
+        
+        # Save as reference if it's a good score
+        if final_score >= 5.0:
+            saved = save_as_reference(image_path, final_score)
+            if saved:
+                print(f"\n⭐ New reference photo saved for score {int(final_score)}!")
+    
+    leaderboard = load_leaderboard()
+    
     # Build output
     output = []
     output.append("")
@@ -101,6 +197,8 @@ def rate_photo(image_path):
     output.append("═" * 44)
     output.append("")
     output.append(f"📸 Photo: {os.path.basename(image_path)}")
+    if rater_name and rater_name != "Unknown":
+        output.append(f"👤 Barista: {rater_name}")
     output.append(f"📅 Rated: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     output.append("")
     output.append("CRITERIA BREAKDOWN")
@@ -121,7 +219,9 @@ def rate_photo(image_path):
     output.append("")
     output.append("💡 TIP")
     output.append(f"   Reference photos at: {REFERENCES_DIR}")
-    output.append("")
+    
+    # Add leaderboard
+    output.append(display_leaderboard(leaderboard))
     
     return "\n".join(output)
 
@@ -129,19 +229,24 @@ def main():
     parser = argparse.ArgumentParser(description="Rate latte art photos")
     parser.add_argument("photo", nargs="?", help="Path to photo")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
-    parser.add_argument("--criteria", action="store_true", help="Show only criteria")
+    parser.add_argument("--name", "-n", help="Name of the barista")
     
     args = parser.parse_args()
     
     if not args.photo:
-        # Interactive mode - check for most recent image
+        # Interactive mode
         print("☕ Latte Art Rating Skill")
-        print("Usage: latte-art-rate <photo_path>")
+        print("Usage: latte-art-rate <photo_path> [-n 'Barista Name']")
         print("")
         print("Provide a photo path to rate your latte art!")
+        
+        # Show current leaderboard
+        leaderboard = load_leaderboard()
+        if leaderboard["entries"]:
+            print(display_leaderboard(leaderboard))
         sys.exit(0)
     
-    result = rate_photo(args.photo)
+    result = rate_photo(args.photo, args.name)
     print(result)
 
 if __name__ == "__main__":
