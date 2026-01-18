@@ -91,7 +91,7 @@ def get_verdict(score):
     else:
         return "Failed. No discernible latte art."
 
-def format_score_bar(score, max_score=10, length=20):
+def format_score_bar(score, max_score=10, length=16):
     """Create a visual score bar"""
     filled = int((score / max_score) * length)
     return "█" * filled + "░" * (length - filled)
@@ -150,7 +150,6 @@ def display_leaderboard(leaderboard):
         return ""
     
     output = []
-    output.append("")
     output.append("🏆 TOP 5 LEADERBOARD")
     output.append("─" * 44)
     
@@ -158,7 +157,6 @@ def display_leaderboard(leaderboard):
         medal = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"][i-1]
         output.append(f" {medal} {entry['name']:15} {entry['score']:.2f}/10  {entry['date']}")
     
-    output.append("")
     return "\n".join(output)
 
 def rate_photo(image_path, rater_name=None):
@@ -192,10 +190,8 @@ def rate_photo(image_path, rater_name=None):
     
     # Build output
     output = []
-    output.append("")
     output.append("☕ LATTE ART RATING")
     output.append("═" * 44)
-    output.append("")
     output.append(f"📸 Photo: {os.path.basename(image_path)}")
     if rater_name and rater_name != "Unknown":
         output.append(f"👤 Barista: {rater_name}")
@@ -210,9 +206,7 @@ def rate_photo(image_path, rater_name=None):
     
     output.append("─" * 44)
     output.append("")
-    output.append("🏆 FINAL SCORE")
-    output.append("")
-    output.append(f"   {final_score:.2f}/10")
+    output.append(f"🏆 FINAL SCORE: {final_score:.2f}/10")
     output.append("")
     output.append("📈 VERDICT")
     output.append(f"   {verdict}")
