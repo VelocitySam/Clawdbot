@@ -64,27 +64,27 @@ def calculate_final_score(criteria):
     return round(total, 2)
 
 def get_verdict(score):
-    """Get text verdict based on score"""
-    if score >= 9.5:
-        return "Perfection. Competition-winning quality!"
+    """Get text verdict based on score (strict scale)"""
+    if score >= 10.0:
+        return "WORLD CHAMPION. Flawless. Magazine cover quality."
     elif score >= 9.0:
-        return "Exceptional. Near-perfect execution."
+        return "Exceptional. Competition finalist level."
     elif score >= 8.0:
-        return "Excellent. Professional level technique."
+        return "Excellent. Professional barista quality."
     elif score >= 7.0:
-        return "Great. Strong pour with good technique."
+        return "Good. Strong home barista skills."
     elif score >= 6.0:
-        return "Good. Solid pour, minor improvements possible."
+        return "Average. Decent, but obvious room for improvement."
     elif score >= 5.0:
-        return "Average. Decent, room for improvement."
+        return "Below Average. Basic technique issues."
     elif score >= 4.0:
-        return "Below average. Technique needs work."
+        return "Poor. Significant problems with execution."
     elif score >= 3.0:
-        return "Poor. Significant issues with execution."
+        return "Very Poor. Little skill demonstrated."
     elif score >= 2.0:
-        return "Very poor. Basic structure lacking."
+        return "Failed. Barely recognizable as latte art."
     else:
-        return "Failed. No discernible latte art."
+        return "No Latte Art. Complete failure."
 
 def format_score_bar(score, max_score=10, length=16):
     """Create a visual score bar"""
