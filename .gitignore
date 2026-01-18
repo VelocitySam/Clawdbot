@@ -1,0 +1,18 @@
+# Secrets and sensitive data
+.ha_env
+.clawdhub/
+*.log
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Clawdbot internal
+.clawdbot/
+*.pem
+*.key
