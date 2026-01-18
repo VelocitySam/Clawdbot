@@ -1,0 +1,148 @@
+#!/usr/bin/env python3
+"""
+Latte Art Rating Skill
+Analyzes latte art photos and provides detailed scoring breakdown
+"""
+
+import os
+import sys
+import json
+import argparse
+from pathlib import Path
+from datetime import datetime
+
+# Image analysis would normally use OpenCV/PIL
+# For this skill, we provide a structured framework
+
+SKILL_DIR = Path(__file__).parent
+REFERENCES_DIR = SKILL_DIR / "references"
+
+def analyze_image(image_path):
+    """
+    Analyze latte art photo and return scores
+    Returns dict with criteria breakdown and final score
+    """
+    # Placeholder for actual computer vision analysis
+    # In production, use OpenCV for:
+    # - Symmetry detection
+    # - Contrast measurement
+    # - Edge/line definition
+    # - Pattern recognition
+    
+    return {
+        "symmetry": 7.5,
+        "contrast": 8.0,
+        "definition": 7.0,
+        "flow": 7.5,
+        "complexity": 6.5,
+        "composition": 7.5,
+        "visual_appeal": 8.0
+    }
+
+def calculate_final_score(criteria):
+    """Calculate weighted final score"""
+    weights = {
+        "symmetry": 0.20,
+        "contrast": 0.15,
+        "definition": 0.15,
+        "flow": 0.15,
+        "complexity": 0.10,
+        "composition": 0.15,
+        "visual_appeal": 0.10
+    }
+    
+    total = sum(criteria[k] * weights[k] for k in weights)
+    return round(total, 2)
+
+def get_verdict(score):
+    """Get text verdict based on score"""
+    if score >= 9.5:
+        return "Perfection. Competition-winning quality!"
+    elif score >= 9.0:
+        return "Exceptional. Near-perfect execution."
+    elif score >= 8.0:
+        return "Excellent. Professional level technique."
+    elif score >= 7.0:
+        return "Great. Strong pour with good technique."
+    elif score >= 6.0:
+        return "Good. Solid pour, minor improvements possible."
+    elif score >= 5.0:
+        return "Average. Decent, room for improvement."
+    elif score >= 4.0:
+        return "Below average. Technique needs work."
+    elif score >= 3.0:
+        return "Poor. Significant issues with execution."
+    elif score >= 2.0:
+        return "Very poor. Basic structure lacking."
+    else:
+        return "Failed. No discernible latte art."
+
+def format_score_bar(score, max_score=10, length=20):
+    """Create a visual score bar"""
+    filled = int((score / max_score) * length)
+    return "█" * filled + "░" * (length - filled)
+
+def rate_photo(image_path):
+    """Main function to rate a latte art photo"""
+    
+    if not os.path.exists(image_path):
+        print(f"❌ Error: Image not found: {image_path}")
+        sys.exit(1)
+    
+    # Analyze the image
+    criteria = analyze_image(image_path)
+    final_score = calculate_final_score(criteria)
+    verdict = get_verdict(final_score)
+    
+    # Build output
+    output = []
+    output.append("")
+    output.append("☕ LATTE ART RATING")
+    output.append("═" * 44)
+    output.append("")
+    output.append(f"📸 Photo: {os.path.basename(image_path)}")
+    output.append(f"📅 Rated: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    output.append("")
+    output.append("CRITERIA BREAKDOWN")
+    output.append("─" * 44)
+    
+    for criterion, score in criteria.items():
+        bar = format_score_bar(score)
+        output.append(f" {criterion.title():16} {bar} {score:.1f}/10")
+    
+    output.append("─" * 44)
+    output.append("")
+    output.append("🏆 FINAL SCORE")
+    output.append("")
+    output.append(f"   {final_score:.2f}/10")
+    output.append("")
+    output.append("📈 VERDICT")
+    output.append(f"   {verdict}")
+    output.append("")
+    output.append("💡 TIP")
+    output.append(f"   Reference photos at: {REFERENCES_DIR}")
+    output.append("")
+    
+    return "\n".join(output)
+
+def main():
+    parser = argparse.ArgumentParser(description="Rate latte art photos")
+    parser.add_argument("photo", nargs="?", help="Path to photo")
+    parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument("--criteria", action="store_true", help="Show only criteria")
+    
+    args = parser.parse_args()
+    
+    if not args.photo:
+        # Interactive mode - check for most recent image
+        print("☕ Latte Art Rating Skill")
+        print("Usage: latte-art-rate <photo_path>")
+        print("")
+        print("Provide a photo path to rate your latte art!")
+        sys.exit(0)
+    
+    result = rate_photo(args.photo)
+    print(result)
+
+if __name__ == "__main__":
+    main()
