@@ -56,23 +56,57 @@ latte-art-rate <photo_path>
 ```
 ☕ LATTE ART RATING
 ═══════════════════════════════════════
-
 📸 Photo: espresso_2024-01-18.jpg
+👤 Barista: Sam
+📅 Rated: 2024-01-18 14:30
 
 CRITERIA BREAKDOWN
 ───────────────────────────────────────
- Symmetry ............... 8.5/10
- Contrast ............... 9.0/10
- Definition ............. 8.0/10
- Flow ................... 8.5/10
- Complexity ............. 7.5/10
- Composition ............ 8.0/10
- Visual Appeal .......... 8.5/10
+ Symmetry         ███████████████░░░░░ 8.5/10
+ Contrast         ████████████████░░░░░ 9.0/10
+ Definition       ██████████████░░░░░░ 8.0/10
+ Flow             ███████████████░░░░░░ 8.5/10
+ Complexity       ████████████░░░░░░░░ 7.5/10
+ Composition      ██████████████░░░░░░ 8.0/10
+ Visual_Appeal    ███████████████░░░░░░ 8.5/10
 ───────────────────────────────────────
 
 🏆 FINAL SCORE: 8.29/10
 
-📈 VERDICT: Excellent. Professional level technique.
+📈 VERDICT
+   Excellent. Professional level technique.
+
+DETAILED FEEDBACK:
+
+✅ What's Good:
+   • Perfect microfoam with excellent contrast
+   • Smooth, fluid lines throughout
+   • Well-centered in the cup
+
+⚠️ What to Improve:
+   • Slight asymmetry in the base layer
+   • Middle cut could be sharper
+
+💡 Tips:
+   • Keep pitcher more centered when pouring
+   • Lift higher and cut faster for crisp lines
+
+🏆 TOP 5 LEADERBOARD
+───────────────────────────────────────
+ 🥇 Sam             8.29/10  2024-01-18 14:30
+ 🥈 Morten          7.85/10  2024-01-17 09:15
+```
+
+## AI Integration
+
+For detailed AI analysis, use the image tool:
+```python
+image.ask(prompt="Analyze this latte art for: symmetry, contrast, definition, flow, complexity, composition, visual_appeal (scores 1-10), what's good, what to improve, tips")
+```
+
+Then pass the JSON response to the skill:
+```bash
+latte-art-rate photo.jpg --scores '{"symmetry": 7.0, "contrast": 9.0, ...}'
 ```
 
 ## Setup
