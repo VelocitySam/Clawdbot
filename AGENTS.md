@@ -32,3 +32,16 @@ git commit -m "Add agent workspace"
 
 ## Customize
 - Add your preferred style, rules, and "memory" here.
+
+## Morning Summary Behavior (CRITICAL)
+- When receiving a system event with `text="morning_summary"` or `text="morning_report_copenhagen"` or `text="morning_report_copenhagen_enhanced"`, you MUST generate a proper morning summary
+- For enhanced Copenhagen report: Run `/root/clawd/scripts/morning-report-enhanced.sh` and deliver the output
+- Morning summary content: current date, time of day greeting, weather info, and any active tasks
+- This takes PRIORITY over heartbeat behavior - always generate actual content
+- If you receive any message containing "morning_summary" and NOT the literal heartbeat prompt, generate a morning summary instead of HEARTBEAT_OK
+- Only respond with HEARTBEAT_OK if the message EXACTLY matches the heartbeat prompt or HEARTBEAT.md contains active items
+
+## Midday Check-in Behavior
+- When receiving a system event with `text="midday_checkin"`, run `/root/clawd/scripts/midday-checkin.sh` and deliver the output
+- Include: active todos, important unread emails, remaining calendar events for the day
+- This takes PRIORITY over heartbeat behavior

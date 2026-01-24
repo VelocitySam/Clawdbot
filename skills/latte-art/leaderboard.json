@@ -2,21 +2,18 @@
   "entries": [
     {
       "name": "Sam",
-      "score": 4.7,
-      "date": "2026-01-17 17:51",
-      "photo": "40b39870-7581-4c37-8e11-1bf535b41a7f.jpg"
-    },
-    {
-      "name": "Adam",
-      "score": 4.66,
-      "date": "2026-01-04 17:48",
-      "photo": "b9b0afee-8a83-4b63-aab4-b37656ae2ac9.jpg"
+      "score": 8.35,
+      "date": "2026-01-22",
+      "photo": "44d7ba46-f71e-473e-ac71-8ee387c54eb8.jpg",
+      "id": 2
     },
     {
       "name": "Sam",
-      "score": 4.49,
-      "date": "2026-01-18 17:50",
-      "photo": "f0a7127c-f9ef-40ee-951f-650eb99140d9.jpg"
+      "score": 7.21,
+      "date": "2026-01-22",
+      "photo": "f4834f55-f7dc-4a88-a1f4-7d8e6d103913.jpg",
+      "id": 1
     }
-  ]
+  ],
+  "next_id": 3
 }

@@ -1,0 +1,51 @@
+# Dependencies & package managers
+node_modules/
+.pnp.cjs
+.pnp.loader.mjs
+
+# Logs & diagnostics
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment & runtime data
+.env
+.env.*
+!.env.example
+.tmp/
+tmp/
+.cache/
+.parcel-cache/
+
+# Build artifacts
+dist-*/
+build/
+.next/
+out/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+*.tgz
+*.tar.gz
+*.zip
+*.delta
+
+# Testing & tooling
+.jest-cache/
+.jest-test-results.json
+.vitest/
+
+# Editors & OS cruft
+.DS_Store
+**/.DS_Store
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Avoid nested lockfiles when installing from repo root.
+daemon/pnpm-lock.yaml

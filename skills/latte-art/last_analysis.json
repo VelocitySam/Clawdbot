@@ -1,0 +1,42 @@
+{
+  "image": "3393290a-83fc-4a99-8d48-33eaf6bfaf66.jpg",
+  "timestamp": "2026-01-21T00:00:00",
+  "analysis": {
+    "criteria": {
+      "symmetry": 7.5,
+      "contrast": 8.0,
+      "definition": 7.0,
+      "flow": 7.5,
+      "complexity": 6.0,
+      "composition": 8.5,
+      "visual_appeal": 8.0
+    },
+    "feedback": {
+      "criteria": {
+        "symmetry": 7.5,
+        "contrast": 8.0,
+        "definition": 7.0,
+        "flow": 7.5,
+        "complexity": 6.0,
+        "composition": 8.5,
+        "visual_appeal": 8.0
+      },
+      "good": [
+        "Excellent centering of the art within the green cup.",
+        "Clear contrast between the bright white microfoam and the golden-brown crema.",
+        "Silky milk texture with minimal visible large bubbles.",
+        "The natural sunlight highlights the warm tones of the beverage and the wooden background."
+      ],
+      "improve": [
+        "The definition of the internal layers could be sharper to avoid a slightly blurred look.",
+        "Improve symmetry by ensuring the tilt of the cup is perfectly level as the pattern expands.",
+        "The base of the heart/tulip is a bit rounded; a more defined point would enhance the shape."
+      ],
+      "tips": [
+        "Try a slightly more aggressive wiggle at the start of the pour to create more distinct ripples.",
+        "Focus on a steady, slow flow rate to prevent the layers from merging together.",
+        "Lift the pitcher higher at the end for the final pull-through to create a thinner, cleaner center line."
+      ]
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noEmit": false,
+    "moduleResolution": "node",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@tests/*": [
+        "./tests/*"
+      ],
+      "@sweetlink/shared": [
+        "./shared/src/index.ts"
+      ],
+      "@sweetlink/shared/*": [
+        "./shared/src/*"
+      ],
+      "@sweetlink/shared/node": [
+        "./shared/src/node.ts"
+      ],
+      "@sweetlink-app": [
+        "./src/index.ts"
+      ],
+      "@sweetlink-app/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "./src/**/*",
+    "./daemon/src/**/*"
+  ],
+  "exclude": [
+    "./src/**/*.test.ts",
+    "./daemon/src/**/*.test.ts"
+  ]
+}

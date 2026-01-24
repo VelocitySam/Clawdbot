@@ -20,3 +20,7 @@ Add whatever else you want the assistant to know about your local toolchain.
 - **URL:** http://127.0.0.1:8123
 - **Token:** eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJiMmE3MmEzNzBiNWE0ZWUxOWIzM2Y3NGJiNWI0Y2M2ZCIsImlhdCI6MTc2ODczOTg3NSwiZXhwIjoyMDg0MDk5ODc1fQ.B_lWPqt3twbFztiQtGawVomU3viraHFL168byv1Uy9c
 - **Entity:** gaggiuino_coffee_machine (switch)
+
+## Notion
+- **Config file:** /root/clawd/.notion_env
+- **Token:** stored in .notion_env (persistent)

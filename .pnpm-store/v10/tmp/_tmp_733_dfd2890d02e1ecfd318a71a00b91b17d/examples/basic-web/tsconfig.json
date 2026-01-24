@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "strict": true,
+    "types": ["vite/client", "node"],
+    "allowJs": false,
+    "paths": {
+      "sweetlink/runtime/browser": ["../../src/runtime/browser/index.ts"]
+    }
+  },
+  "include": ["src/**/*", "vite.config.ts"],
+  "exclude": ["dist", "server.ts", "server/**/*"]
+}

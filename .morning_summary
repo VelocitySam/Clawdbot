@@ -1,0 +1,4 @@
+# Morning Summary Config
+NOTION_TASKS_DB_ID=2b5009ce-b59d-80da-919b-000b806e9c9d
+NOTION_TASKS_FILTER={"or": [{"property": "Status", "status": {"equals": "Not started"}}, {"property": "Status", "status": {"equals": "In progress"}}]}
+WEATHER_LOCATION=Copenhagen

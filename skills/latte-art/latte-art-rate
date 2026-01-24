@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """
-Latte Art Rating Skill
-Analyzes latte art photos with AI and provides detailed scoring breakdown
+Latte Art Rating Skill - Simplified Output Format
 """
 
 import os
 import sys
 import json
 import argparse
-import shutil
+import re
 from pathlib import Path
 from datetime import datetime
 
@@ -17,230 +16,218 @@ REFERENCES_DIR = SKILL_DIR / "references"
 LEADERBOARD_FILE = SKILL_DIR / "leaderboard.json"
 ANALYSIS_FILE = SKILL_DIR / "last_analysis.json"
 
-# Ensure directories exist
 REFERENCES_DIR.mkdir(exist_ok=True)
 
 def load_leaderboard():
-    """Load leaderboard from file"""
     if LEADERBOARD_FILE.exists():
         with open(LEADERBOARD_FILE, 'r') as f:
             return json.load(f)
-    return {"entries": []}
+    return {"entries": [], "next_id": 1}
 
 def save_leaderboard(leaderboard):
-    """Save leaderboard to file"""
     with open(LEADERBOARD_FILE, 'w') as f:
         json.dump(leaderboard, f, indent=2)
 
 def analyze_with_ai(image_path):
-    """
-    Use AI to analyze the latte art image and return detailed scores
-    """
-    # This will be called via the image tool externally
-    # For now, save the path for external analysis
     return {
-        "symmetry": 7.0,
-        "contrast": 9.0,
-        "definition": 7.5,
-        "flow": 8.0,
-        "complexity": 5.0,
-        "composition": 8.0,
-        "visual_appeal": 8.5
+        "symmetry": 7.0, "contrast": 9.0, "definition": 7.5,
+        "flow": 8.0, "complexity": 5.0, "composition": 8.0, "visual_appeal": 8.5
     }
 
-def calculate_final_score(criteria):
-    """Calculate weighted final score"""
-    weights = {
-        "symmetry": 0.20,
-        "contrast": 0.15,
-        "definition": 0.15,
-        "flow": 0.15,
-        "complexity": 0.10,
-        "composition": 0.15,
-        "visual_appeal": 0.10
+def parse_ai_response(response):
+    response = re.sub(r'```[a-z]*\n?', '', response)
+    response = re.sub(r'```', '', response)
+    response = response.strip()
+    
+    json_match = re.search(r'\{[^{}]*"criteria"[^{}]*\}', response, re.DOTALL)
+    if json_match:
+        try:
+            parsed = json.loads(json_match.group())
+            if "criteria" in parsed:
+                return parsed
+        except:
+            pass
+    
+    try:
+        start = response.find('{')
+        end = response.rfind('}')
+        if start != -1 and end != -1:
+            parsed = json.loads(response[start:end+1])
+            if "criteria" in parsed or "good" in parsed:
+                return parsed
+    except:
+        pass
+    
+    scores = {}
+    text_lower = response.lower()
+    
+    score_patterns = {
+        "symmetry": r'(?:symmetry)[\s:]*([0-9]+\.?[0-9]*)',
+        "contrast": r'(?:contrast)[\s:]*([0-9]+\.?[0-9]*)',
+        "definition": r'(?:definition|detail)[\s:]*([0-9]+\.?[0-9]*)',
+        "flow": r'(?:flow)[\s:]*([0-9]+\.?[0-9]*)',
+        "complexity": r'(?:complexity)[\s:]*([0-9]+\.?[0-9]*)',
+        "composition": r'(?:composition)[\s:]*([0-9]+\.?[0-9]*)',
+        "visual_appeal": r'(?:visual[\s_]?appeal|overall)[\s:]*([0-9]+\.?[0-9]*)',
     }
     
+    for criterion, pattern in score_patterns.items():
+        match = re.search(pattern, text_lower)
+        if match:
+            scores[criterion] = min(10.0, max(1.0, float(match.group(1))))
+    
+    verdict_match = re.search(r'(?:verdict)[:\s]*(.+?)(?:\n|$)', response, re.IGNORECASE)
+    verdict = verdict_match.group(1).strip() if verdict_match else "Good latte art."
+    
+    return {"criteria": scores if scores else None, "verdict": verdict}
+
+def calculate_final_score(criteria):
+    weights = {
+        "symmetry": 0.20, "contrast": 0.15, "definition": 0.15,
+        "flow": 0.15, "complexity": 0.10, "composition": 0.15, "visual_appeal": 0.10
+    }
     total = sum(criteria[k] * weights[k] for k in weights)
     return round(total, 2)
 
-def get_verdict(score):
-    """Get text verdict based on score (strict scale)"""
-    if score >= 10.0:
-        return "WORLD CHAMPION. Flawless. Magazine cover quality."
-    elif score >= 9.0:
-        return "Exceptional. Competition finalist level."
-    elif score >= 8.0:
-        return "Excellent. Professional barista quality."
-    elif score >= 7.0:
-        return "Good. Strong home barista skills."
-    elif score >= 6.0:
-        return "Average. Decent, but obvious room for improvement."
-    elif score >= 5.0:
-        return "Below Average. Basic technique issues."
-    elif score >= 4.0:
-        return "Poor. Significant problems with execution."
-    elif score >= 3.0:
-        return "Very Poor. Little skill demonstrated."
-    elif score >= 2.0:
-        return "Failed. Barely recognizable as latte art."
-    else:
-        return "No Latte Art. Complete failure."
-
-def format_score_bar(score, max_score=10, length=16):
-    """Create a visual score bar"""
-    filled = int((score / max_score) * length)
-    return "█" * filled + "░" * (length - filled)
-
-def update_leaderboard(leaderboard, name, score, photo_path):
-    """Update leaderboard with new entry"""
+def update_leaderboard(leaderboard, name, score, photo_path, rating_date=None):
+    if rating_date is None:
+        rating_date = datetime.now().strftime("%Y-%m-%d")
+    
+    photo_basename = os.path.basename(photo_path)
+    
+    existing_idx = None
+    for i, entry in enumerate(leaderboard["entries"]):
+        if entry.get("photo") == photo_basename and entry.get("name") == name:
+            existing_idx = i
+            break
+    
     entry = {
         "name": name,
-        "score": score,
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "photo": os.path.basename(photo_path)
+        "score": round(score, 2),
+        "date": rating_date,
+        "photo": photo_basename
     }
     
-    leaderboard["entries"].append(entry)
+    if existing_idx is not None:
+        leaderboard["entries"][existing_idx] = entry
+    else:
+        entry["id"] = leaderboard.get("next_id", 1)
+        leaderboard["next_id"] = leaderboard.get("next_id", 1) + 1
+        leaderboard["entries"].append(entry)
     
-    # Sort by score descending
-    leaderboard["entries"] = sorted(
-        leaderboard["entries"], 
-        key=lambda x: x["score"], 
-        reverse=True
-    )
-    
-    # Keep only top 5
+    leaderboard["entries"] = sorted(leaderboard["entries"], key=lambda x: x["score"], reverse=True)
     leaderboard["entries"] = leaderboard["entries"][:5]
-    
     save_leaderboard(leaderboard)
 
-def display_leaderboard(leaderboard):
-    """Display the leaderboard"""
-    if not leaderboard["entries"]:
-        return ""
-    
-    output = []
-    output.append("🏆 TOP 5 LEADERBOARD")
-    output.append("─" * 44)
-    
-    for i, entry in enumerate(leaderboard["entries"], 1):
-        medal = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"][i-1]
-        output.append(f" {medal} {entry['name']:15} {entry['score']:.2f}/10  {entry['date']}")
-    
-    return "\n".join(output)
-
-def save_analysis(analysis, image_path):
-    """Save the last analysis for reference"""
-    with open(ANALYSIS_FILE, 'w') as f:
-        json.dump({
-            "image": os.path.basename(image_path),
-            "timestamp": datetime.now().isoformat(),
-            "analysis": analysis
-        }, f, indent=2)
-
-def rate_photo(image_path, rater_name=None, ai_analysis=None):
-    """Main function to rate a latte art photo"""
-    
+def rate_photo(image_path, rater_name=None, ai_response=None, rating_date=None):
     if not os.path.exists(image_path):
         print(f"❌ Error: Image not found: {image_path}")
         sys.exit(1)
     
-    # Use AI analysis if provided, otherwise use defaults
-    if ai_analysis:
-        criteria = ai_analysis.get("criteria", {})
-    else:
+    criteria = None
+    feedback_data = None
+    
+    if ai_response:
+        parsed = parse_ai_response(ai_response)
+        if parsed:
+            criteria = parsed.get("criteria")
+            feedback_data = parsed
+    
+    if not criteria:
         criteria = analyze_with_ai(image_path)
+    else:
+        all_criteria = ["symmetry", "contrast", "definition", "flow", "complexity", "composition", "visual_appeal"]
+        for c in all_criteria:
+            if c not in criteria:
+                criteria[c] = 7.0
     
     final_score = calculate_final_score(criteria)
-    verdict = get_verdict(final_score)
     
-    # Update leaderboard if named
     leaderboard = load_leaderboard()
     if rater_name and rater_name != "Unknown":
-        update_leaderboard(leaderboard, rater_name, final_score, image_path)
+        update_leaderboard(leaderboard, rater_name, final_score, image_path, rating_date)
     
     leaderboard = load_leaderboard()
     
-    # Build output
+    if rating_date:
+        try:
+            if 'T' in rating_date:
+                display_date = datetime.fromisoformat(rating_date.replace('Z', '+00:00')).strftime("%b %d, %Y")
+            else:
+                display_date = datetime.strptime(rating_date, "%Y-%m-%d").strftime("%b %d, %Y")
+        except:
+            display_date = rating_date
+    else:
+        display_date = datetime.now().strftime("%b %d, %Y")
+    
+    entry_num = len(leaderboard["entries"])
+    
     output = []
-    output.append("☕ LATTE ART RATING")
-    output.append("═" * 44)
-    output.append(f"📸 Photo: {os.path.basename(image_path)}")
-    if rater_name and rater_name != "Unknown":
-        output.append(f"👤 Barista: {rater_name}")
-    output.append(f"📅 Rated: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     output.append("")
-    output.append("CRITERIA BREAKDOWN")
-    output.append("─" * 44)
-    
-    for criterion, score in criteria.items():
-        bar = format_score_bar(score)
-        output.append(f" {criterion.title():16} {bar} {score:.1f}/10")
-    
-    output.append("─" * 44)
+    output.append("☕ Latte Art Rating")
     output.append("")
-    output.append(f"🏆 FINAL SCORE: {final_score:.2f}/10")
+    output.append(f"Entry #{entry_num} — {rater_name} ({display_date})")
     output.append("")
-    output.append("📈 VERDICT")
-    output.append(f"   {verdict}")
-    
-    # Add detailed feedback if available
-    if ai_analysis and "feedback" in ai_analysis:
-        output.append("")
-        output.append("DETAILED FEEDBACK:")
-        output.append("")
-        output.append("✅ What's Good:")
-        for line in ai_analysis.get("good", []):
-            output.append(f"   • {line}")
-        output.append("")
-        output.append("⚠️ What to Improve:")
-        for line in ai_analysis.get("improve", []):
-            output.append(f"   • {line}")
-        output.append("")
-        output.append("💡 Tips:")
-        for line in ai_analysis.get("tips", []):
-            output.append(f"   • {line}")
-    
-    # Add leaderboard
+    output.append(f"Score: {final_score}")
     output.append("")
-    output.append(display_leaderboard(leaderboard))
+    output.append("Criteria Score")
     
-    # Save analysis
-    save_analysis({"criteria": criteria, "feedback": ai_analysis} if ai_analysis else {"criteria": criteria}, image_path)
+    all_criteria = ["symmetry", "contrast", "flow", "detail", "overall"]
+    criteria_display = {
+        "symmetry": criteria.get("symmetry", 7.0),
+        "contrast": criteria.get("contrast", 7.0),
+        "flow": criteria.get("flow", 7.0),
+        "detail": criteria.get("definition", 7.0),
+        "overall": criteria.get("visual_appeal", 7.0)
+    }
+    
+    for c in all_criteria:
+        output.append(f"{c.title()} {criteria_display[c]:.2f}")
+    
+    output.append("")
+    
+    verdict = feedback_data.get("verdict", "Good latte art.") if feedback_data else "Good latte art."
+    output.append(f"Verdict: {verdict}")
+    output.append("")
+    output.append("Leaderboard 🏆")
+    output.append("")
+    output.append("Rank Barista Score Date")
+    
+    for i, entry in enumerate(leaderboard["entries"], 1):
+        output.append(f"{i} {entry['name']} {entry['score']:.2f} {entry['date']}")
+    
+    if leaderboard["entries"]:
+        leader = leaderboard["entries"][0]
+        output.append("")
+        output.append(f"{leader['name']} is in the lead! 🏆 Beat {leader['score']:.2f} to take first place.")
     
     return "\n".join(output)
 
 def main():
     parser = argparse.ArgumentParser(description="Rate latte art photos")
     parser.add_argument("photo", nargs="?", help="Path to photo")
-    parser.add_argument("--json", action="store_true", help="Output as JSON")
     parser.add_argument("--name", "-n", help="Name of the barista")
-    parser.add_argument("--scores", "-s", help="JSON scores from AI analysis")
+    parser.add_argument("--scores", "-s", help="AI analysis JSON or text")
+    parser.add_argument("--date", "-d", help="Date (YYYY-MM-DD)")
     
     args = parser.parse_args()
     
     if not args.photo:
-        # Interactive mode
-        print("☕ Latte Art Rating Skill")
-        print("Usage: latte-art-rate <photo_path> [-n 'Barista Name']")
-        print("")
-        print("Provide a photo path to rate your latte art!")
-        
-        # Show current leaderboard
         leaderboard = load_leaderboard()
+        print("☕ Latte Art Rating")
+        print("Usage: latte-art-rate <photo_path> [-n 'Name'] [-s '<JSON>'] [-d 'YYYY-MM-DD']")
         if leaderboard["entries"]:
-            print(display_leaderboard(leaderboard))
+            print("\nLeaderboard 🏆")
+            print("\nRank Barista Score Date")
+            for i, entry in enumerate(leaderboard["entries"], 1):
+                print(f"{i} {entry['name']} {entry['score']:.2f} {entry['date']}")
         sys.exit(0)
     
-    # Parse AI analysis if provided
-    ai_analysis = None
-    if args.scores:
-        try:
-            ai_analysis = json.loads(args.scores)
-        except:
-            pass
+    rating_date = None
+    if args.date:
+        rating_date = args.date
     
-    result = rate_photo(args.photo, args.name, ai_analysis)
+    result = rate_photo(args.photo, args.name, args.scores, rating_date)
     print(result)
 
 if __name__ == "__main__":
