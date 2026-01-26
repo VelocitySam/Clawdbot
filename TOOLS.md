@@ -24,3 +24,9 @@ Add whatever else you want the assistant to know about your local toolchain.
 ## Notion
 - **Config file:** /root/clawd/.notion_env
 - **Token:** stored in .notion_env (persistent)
+
+## gog (Google Workspace CLI)
+- **Keyring password location:** `~/.config/gog/keyring_password` (NOT in /root/clawd/.config/)
+- **Keyring password:** stored in that file
+- **To use:** `GOG_KEYRING_PASSWORD="$(cat ~/.config/gog/keyring_password)"` then run gog commands
+- **Config uses ~ (home dir), NOT workspace folder**
